@@ -1,0 +1,632 @@
+% for notes environment
+\usepackage{xsavebox}
+
+\usepackage{graphicx}
+\usepackage{luatexja}
+\usepackage[hiragino-pron, nfssonly, deluxe, expert]{luatexja-preset}
+\usepackage{fontspec}
+\usepackage{epigraph}
+\usepackage{etoolbox}
+\usepackage{tikz}
+\usepackage{framed}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage{bxcoloremoji}
+\usepackage{xcolor}
+\usepackage{diagbox}
+\usepackage{caption}
+\usepackage{appendixnumberbeamer}
+\usepackage{plantuml}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{calc,positioning}
+
+\setmonofont{CMU Typewriter Text}
+
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usetheme{Boadilla}
+\usecolortheme{seahorse}
+% \usefonttheme{serif}
+
+\setbeamercolor{page number in head/foot}{bg=blue!10}
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\insertshortauthor\hspace*{1ex}(\insertshortinstitute)
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+      \insertshortdate{} @ \InsertConference
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,center]{page number in head/foot}%
+      \insertframenumber{} / \inserttotalframenumber\hspace*{1ex}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\beamertemplatenavigationsymbolsempty
+
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+\setbeamersize{description width=1cm}
+\setbeamertemplate{items}[circle]
+\setbeamertemplate{section in toc}[circle]
+\setbeamertemplate{subsection in toc}{%
+  \leavevmode\leftskip=2em
+  {%
+    \usebeamerfont*{itemize item}%
+    \usebeamercolor{subsection number projected}%
+    \color{bg}%
+    \raise1.25pt\hbox{\donotcoloroutermaths$\bullet$}}%
+  \hskip1.5ex\inserttocsubsection\par}
+
+% Definitions for the title page
+\newcommand*{\GitHub}[1]{%
+  \gdef\InsertGitHub{#1}%
+}
+\newcommand*{\Email}[1]{%
+  \gdef\InsertEmail{\href{mailto:#1}{#1}}%
+}
+\newcommand*{\Conference}[1]{%
+  \gdef\InsertConference{#1}%
+}
+\setbeamerfont{title}{size=\huge, series=\bfseries, family=\mcfamily\rmfamily}
+\setbeamercolor{title}{bg=white}
+\setbeamerfont{subtitle}{size=\Large, series=\mdseries, family=\gtfamily\sffamily}
+\setbeamerfont{email}{size=\scriptsize, family=\ttfamily}
+\setbeamercolor{email}{bg=white}
+\setbeamerfont{date}{family=\gtfamily\sffamily}
+\setbeamerfont{vc}{size=\scriptsize, family=\ttfamily}
+\setbeamercolor{vc}{bg=white}
+
+\renewcommand{\figurename}{Fig}
+
+\input{vc.tex}
+
+\setbeamertemplate{title page}
+{%
+  \vbox{}
+  \vfill
+  \begingroup
+    \centering
+    \hrulefill\par%
+    \vskip1ex\par%
+    \begin{beamercolorbox}[sep=0pt,center,shadow=false,rounded=true]{title}
+      \vfill
+      \usebeamerfont{title}\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.5ex%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%
+      \vfill  
+    \end{beamercolorbox}%
+    \hrulefill\par%
+    \vskip2ex%
+    \begin{beamercolorbox}[sep=0pt,center,shadow=false,rounded=true]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=0pt,center,shadow=false,rounded=true]{email}
+      \usebeamerfont{email}\InsertEmail
+    \end{beamercolorbox}
+    \vskip0.1ex
+    \begin{beamercolorbox}[sep=5pt,center,shadow=false,rounded=true]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=5pt,center,shadow=false,rounded=true]{date}
+      \usebeamerfont{date}\insertdate @ \InsertConference
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=0pt,center,shadow=false,rounded=true]{vc}
+      \usebeamerfont{vc}
+      \url{https://github.com/\InsertGitHub} (\texttt{\GITAbrHash})
+    \end{beamercolorbox}
+    % {\centering
+    %   \href{https://creativecommons.org/licenses/by-nc/4.0/}{%
+    %     \includegraphics[width=0.1\textwidth]{img/by-nc.pdf}%
+    %   }%
+    % }
+    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  \endgroup
+  \vfill
+}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+% ============ ここを消すとNote消える ================
+% \mode<handout>{%
+%   \usepackage{pgfpages}
+%   \setbeameroption{show notes on second screen=right}
+%   \setbeamertemplate{note page}{%
+%     \vspace{2ex}\insertnote%
+%   }
+% }
+% ============ ここを消すとNote消える ================
+
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+\resetcounteronoverlays{lstlisting}
+\definecolor{bluegray}{rgb}{0.4, 0.6, 0.8}
+\DeclareCaptionFormat{listing}{{\color{bluegray}\lstlistingname}#2#3}
+\captionsetup[lstlisting]{format=listing, font={footnotesize}}
+
+\setmonofont[Ligatures=TeX]{CMU Typewriter Text}
+
+\setbeamertemplate{items}[circle]
+
+\input{./lib/quotebox.tex}
+\input{./lib/footnotemark.tex}
+\input{./lib/ballon.tex}
+\input{./lib/callout.tex}
+\input{./lib/listings.tex}
+\input{./lib/notes.tex}
+\input{./lib/stack.tex}
+
+\newcommand\ce[1]{%
+  \coloremojiucs{#1}
+}
+
+\presetkeys{todonotes}{inline, noinlinepar}{}
+
+\title[Webセキュリティー入門]{%
+  Webセキュリティー入門%
+}
+\subtitle{CSRFとCORS}
+\author[吉村 優]{%
+  吉村 優（\textsc{Yoshimura} Hikaru）
+}
+\Email{hikaru\_yoshimura@r.recruit.co.jp}
+\date[July 15, 2021]{%
+  {\rmfamily\itshape \oldstylenums{July 15, 2021}}
+}
+\Conference{Webセキュリティー勉強会}
+\institute[\InsertEmail]{%
+  株式会社リクルート\\
+  Recruit Co., Ltd
+}
+\GitHub{y-yu}
+
+\begin{document}
+
+\setlength{\leftmargini}{1em}
+
+\begin{frame}
+  \maketitle
+\end{frame}
+
+\begin{frame}
+  \frametitle{Table of contents}
+
+  \tableofcontents
+\end{frame}
+
+\section{自己紹介}
+\begin{frame}
+  \frametitle{自己紹介}
+  
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+      \begin{center}
+        \begin{figure}[h]
+          \includegraphics[width=0.95\textwidth]{img/bird.png}%
+        \end{figure}
+      \end{center}
+ 
+      \begin{table}[h]
+        \begin{tabular}{ll}
+          Slack & \texttt{@y-yu} \\
+          Twitter & \href{https://twitter.com/\_yyu\_}{@\_yyu\_} \\
+          Qiita &  \href{https://qiita.com/yyu}{yyu} \\
+          GitHub &  \href{https://github.com/y-yu}{y-yu}
+        \end{tabular}
+      \end{table}
+    \end{column}
+    \begin{column}{0.7\textwidth}
+      \begin{itemize}
+        \item 株式会社ドワンゴ（新卒）
+        \item 株式会社リクルート（中途）
+
+        \item セキュリティー・暗号
+        \item CTF（\url{https://urandom.team/}）
+        \begin{itemize}
+          \item SECCON 2014 オンライン予選 優勝
+          \item SECCON 2015 x CEDEC CHALLENGE ゲームクラッキング＆チートチャレンジ 優勝
+          \item IWSEC Cup 2015 Gold Prize
+          \item サイバーコロッセオ×SECCON 2016 準優勝
+          \item SECCON CTF 2018 International 3rd place
+          \item SECCON CTF Beginners 2020 29th
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section{CSRFとは？}
+
+\begin{frame}[fragile]
+  \frametitle{CSRFとは？}
+
+  \begin{itemize}
+    \item 攻撃者がユーザーの意図しないリクエストを送信させる攻撃
+
+    \pause
+    \item 典型的にはこんな感じ\ce{:point_down:}
+    \begin{minipage}{.8\textwidth}
+      \begin{plantuml}
+        @startuml
+        autonumber
+        actor Attacker AS "攻撃者" #dc322f
+        actor User As "ユーザー"
+        participant AttackWebsite AS "罠サイト" #dc322f
+        database Server AS "ターゲットサーバー"
+       
+        Attacker -> User: 罠サイトへ誘導
+        User -> AttackWebsite: 罠サイトのJSやimgタグ起動
+        AttackWebsite -> Server: HTTPリクエスト送信
+
+        @enduml
+      \end{plantuml}
+    \end{minipage}
+
+    \item 今日はこのCSRFと、それを\textbf{クロスサイト通信}は許可しつつ防御する話
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{CSRFとは？}
+
+  \begin{columns}
+    \begin{column}{.4\textwidth}
+      \begin{minipage}{\textwidth}
+        \begin{plantuml}
+          @startuml
+          
+          participant AttackWebsite AS "罠サイト" #dc322f
+          database Server AS "ターゲットサーバー"
+       
+          autonumber 4
+          
+          AttackWebsite -> Server: HTTPリクエスト送信
+       
+          @enduml
+        \end{plantuml}
+      \end{minipage}
+    \end{column}
+    \begin{column}{.6\textwidth}
+      \simplecallout[{\includegraphics[width=1.3cm]{./img/computer_man.png}}]{-}{orange!10}{なぜ攻撃者は罠サイトを使うのか？\ce{:thinking:}}
+
+      \pause
+      \simplecallout[{\includegraphics[width=1.1cm]{./img/hacker_laugh.png}}]{+}{green!10}{%
+        JSを動かしたいけど正規のページに \\
+        \lstinline|<script>|とかを入れられないから%
+      }
+
+      \begin{itemize}
+        \item 正規のページにJSを無理やり入れる攻撃はXSSとなる
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{CSRF \textit{vs} XSS}
+  
+  \begin{itemize}
+    \item ターゲットのWebサイトで直接攻撃用のJSを埋め込めれば（XSS）それが早い
+
+    \tikz[baseline,remember picture]{\node[anchor=base] (a){};}\hfill\tikz[baseline,remember picture]{\node[anchor=base] (b){};}
+    \begin{center} 
+      \begin{minipage}{.6\textwidth}
+        \begin{plantuml}
+          @startuml
+       
+          actor Attacker AS "攻撃者" #dc322f
+          actor User AS "ユーザー"
+          participant Website AS "ターゲットのWebサイト"
+          database Server AS "ターゲットサーバー"
+       
+          Attacker -> Website: 攻撃用のJSを仕込む
+          User -> Website: Webサイトにやってくる
+          Website -> Website: 攻撃用JSが起動
+          Website -> Server: 意図しないHTTPリクエスト送信
+          @enduml
+        \end{plantuml}
+      \end{minipage}
+    \end{center}
+    \tikz[baseline,remember picture]{\node[anchor=base] (c){};}\hfill\tikz[baseline,remember picture]{\node[anchor=base] (d){};}
+    
+    \pause
+    \item しかしそれができないので、攻撃者は罠サイトを利用する
+    \begin{tikzpicture}[remember picture, overlay]
+      \draw[red!70, line width=1cm] (a) -- ($(d) + (0,1)$) (b) -- ( $(c) + (0,1)$ );
+    \end{tikzpicture}
+  \end{itemize}
+\end{frame}
+
+\section{Same Origin Policy(SOP)とCross-Site Request}
+
+\begin{frame}[fragile]
+  \frametitle{CSRFトークン}
+
+  \begin{itemize}
+    \item \textbf{CSRFトークン}を使えばどうだろうか？
+  \end{itemize}
+
+  \begin{columns}
+    \begin{column}{.35\textwidth}
+      \begin{minipage}{.85\textwidth}
+        \begin{plantuml}
+          @startuml
+          
+          participant Website AS "Webサイト"
+          database Server AS "サーバー"
+       
+          autonumber
+          Website -> Server: CookieとCSRFトークン
+          Server -> Server: 処理
+          @enduml
+        \end{plantuml}
+      \end{minipage}
+
+      \pause
+      \begin{minipage}{\textwidth}
+        \begin{plantuml}
+          @startuml
+          
+          participant AttackWebsite AS "罠サイト" #dc322f
+          database Server AS "サーバー"
+          
+          AttackWebsite -> Server: HTTPリクエスト送信
+          note right
+            区別
+            できない！
+          end note
+          @enduml
+        \end{plantuml}
+      \end{minipage}
+    \end{column}
+    \begin{column}{.65\textwidth}
+      \simplecallout[{\includegraphics[width=1.3cm]{./img/hacker_white_angry.png}}]{-}{orange!10}{%
+        Webサイトとサーバーは別ドメインなので、\\
+        罠サイトと区別できない\ce{:innocent:}%
+      }
+       
+      \pause
+      \simplecallout[{\includegraphics[width=1.3cm]{./img/chrome.png}}]{+}{green!10}{%
+        クロスサイトの通信を基本的に禁止とするか \\
+        （過激派）%
+      }
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Same Origin Policy(SOP)}
+
+  \pause
+  \begin{itemize}
+    \item Webブラウザーはこのような罠サイトを跨いだHTTPリクエストが
+    攻撃に発展すると考えて、\emph{Same Origin Policy(SOP)}を持っている
+   
+    \item SOPによってオリジンに跨がる\emph{Cross-site Request}を基本的にはできない
+  \end{itemize}
+
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{minipage}{.9\textwidth}
+        \begin{plantuml}
+          @startuml
+          
+          participant AttackWebsite AS "罠サイト" #dc322f
+          database Server AS "ターゲットサーバー"
+       
+          autonumber 4
+          
+          AttackWebsite ->x Server: HTTPリクエスト送信
+          note right
+            SOPによりサイトを
+            跨いだ通信はブロック！
+          end note
+       
+          @enduml
+        \end{plantuml}
+      \end{minipage}
+    \end{column}
+    \begin{column}{.5\textwidth}        
+      \begin{itemize}
+        \item ただし\lstinline|<img>|タグとかで画像を読みこんだりするのはクロスサイトでもできる
+       
+        \item GETで副作用が起きてしまうのはSOPの恩恵が受けられず、
+        CSRFに発展する危険性がある
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  
+  \pause
+  \simplecallout[{\includegraphics[width=1.3cm]{./img/computer_programming_man.png}}]{+}{red!10}{%
+    とはいえこれでは不便！無理やり回避するか！%
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{JSONP(JSON with Padding)}
+  
+  \begin{itemize}    
+    \item （他にもいろいろあるかもしれないけど）SOPを回避する\textbf{かつてあった}代表的な方法が
+    \emph{JSONP（JSON with Padding）}である
+
+    \pause
+    \begin{columns}
+      \begin{column}{.5\textwidth}
+\begin{lstlisting}[style=scala, caption={サーバー}]
+val json = {'json': ...} /* 渡したいJSON！ */
+val callback = request.query.get('callback')
+Results
+  .Ok { s"$callback($json)" }
+  .withHeader("application/javascript")
+\end{lstlisting}
+      \end{column}
+      \begin{column}{.5\textwidth}
+\begin{lstlisting}[style=html, caption={HTML}]
+<script>
+function callback(json) {
+  /* サーバーのJSONをつかった処理 */
+}
+</script>
+<script src="https://server.example.com/?callback=callback">
+\end{lstlisting}        
+      \end{column}
+    \end{columns}
+
+    \item すると\lstinline|callback( {'json': ...} )|というようなJSがロードされる
+    \begin{itemize}
+      \item \lstinline|{'json': ...}|はサーバーが作ったデータ
+    \end{itemize}
+
+    \pause
+    \item サーバーが作ったJSONをJSの関数に入れて実行できる
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{JSONP \textit{vs} CORS}
+
+  \simplecallout[{\includegraphics[width=1.2cm]{./img/hacker_white.png}}]{+}{cyan!10}{%
+    JSONPでクロスサイト通信は解決！なぜCORS（？）があるの？\ce{:thinking:}%
+  }
+
+  \pause
+  \simplecallout[{\includegraphics[width=1cm]{./img/hacker_laugh.png}}]{-}{red!10}{%
+    JSONPはXSS脆弱性の踏み台になる\ce{:smiling_imp:} \\
+    （この話は\emph{Content Security Policy}などが絡み高度なので割愛）%
+  }
+
+  \pause
+  \simplecallout[{\includegraphics[width=1.3cm]{./img/seminar.png}}]{+}{green!10}{%
+    そこでより洗練された方法がCORS！%
+  }
+\end{frame}
+
+\section{CORS(Cross-Origin Request Sharing)}
+
+\begin{frame}[fragile]
+  \frametitle{CORS(Cross-Origin Request Sharing)}
+
+  \pause
+  \begin{columns}
+    \begin{column}{.55\textwidth}
+      \begin{minipage}{\textwidth}
+        \begin{plantuml}
+          @startuml
+          
+          participant Website AS "Webサイト"
+          database Server AS "サーバー"
+       
+          autonumber
+          Website -> Server: このOriginならOKですか？
+          Server -> Server: OriginがOKか検査
+          alt OK
+            Server --> Website: OKです（CORSヘッダー返す）
+          else NG
+            Server --> Website: NGです
+            note right
+              SOPによりサイトを
+              跨いだ通信はブロック！
+            end note
+          end
+          @enduml
+        \end{plantuml}
+      \end{minipage}
+    \end{column}
+    \begin{column}{.45\textwidth}        
+      \begin{itemize}
+        \item \ce{:point_left:}こんな感じで事前にOKなオリジンかどうかをサーバーに問合せる
+
+        \item OKなときサーバーが専用のCORSのヘッダーを返すと、ブラウザーがそれを検出して
+        SOPによる制限を緩和してくれる
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \begin{itemize}
+    \item この\lstinline|Origin|ヘッダーはブラウザーが付けるので攻撃者が改竄することはできない
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{CSRFトークン}
+
+  \begin{itemize}
+    \item 冒頭で紹介したCSRFトークンはXHRやFetch APIではない\lstinline|form|タグ
+    などで利用する
+    \begin{itemize}
+      \item このときにクロスドメインならCORSを使う
+    \end{itemize}
+
+    \item ブラウザーはXHRなどにしか\lstinline|Origin|ヘッダーを付与しない
+  \end{itemize}
+
+  \begin{center}
+    \begin{minipage}{.4\textwidth}
+      \begin{plantuml}
+        @startuml
+        
+        participant Website AS "Webサイト"
+        database Server AS "サーバー"
+     
+        autonumber
+        Website -> Server: CSRFトークンを要求する
+        Server --> Website: CSRFトークンを返す
+        Website -> Server: CookieとCSRFトークン
+        Server -> Server: 処理
+        @enduml
+      \end{plantuml}
+    \end{minipage}
+  \end{center}
+\end{frame}
+
+\section{まとめ}
+
+\begin{frame}
+  \frametitle{まとめ}
+  
+  \begin{itemize}
+    \item CORSはCSRFの理解が前提となるし、かつJSONPがなぜ死んだのかも知っておかないといけないから難しい
+
+    \item JSONPがXSSの踏み台になるなど、CSRFとXSSは実は微妙に関係している
+    \begin{itemize}
+      \item とはいえ基本的には別ものな脆弱性
+    \end{itemize}
+
+    \item CSRFはXSSより自由度が低いけど、サーバーのAPI呼び出しによって可能な
+    任意の操作ができてしまう危険な脆弱性
+    \begin{itemize}
+      \item 任意コード実行のような雰囲気で考えている
+    \end{itemize}
+
+    \item XSSについては別の機会で紹介したい
+  \end{itemize}
+\end{frame}
+
+\section*{参考文献}
+
+\begin{frame}%[allowframebreaks]
+  \frametitle{参考文献}
+
+  \nocite{*}
+  \bibliographystyle{junsrt_url}
+  \bibliography{ref}
+\end{frame}
+  
+\begin{frame}
+  \centering
+  {\Huge Thank you for the attention!}
+\end{frame}
+
+\end{document}
