@@ -330,7 +330,9 @@
           actor User AS "ユーザー"
           participant Website AS "ターゲットのWebサイト"
           database Server AS "ターゲットサーバー"
-       
+
+          autonumber
+          
           Attacker -> Website: 攻撃用のJSを仕込む
           User -> Website: Webサイトにやってくる
           Website -> Website: 攻撃用JSが起動
